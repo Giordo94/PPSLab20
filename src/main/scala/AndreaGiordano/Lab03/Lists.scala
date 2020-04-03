@@ -31,6 +31,32 @@ object Lists {
       case Nil() => Nil()
     }
 
+    @annotation.tailrec
+    def drop[A](l: List[A], n: Int): List[A] = l match {
+      case Cons(_,t) if n > 1 => drop(t,n-1)
+      case Cons(_,t) if n == 1 => t
+      case Nil() => Nil()
+      case _ => l
+    }
+
+    def flatMap[A,B](l: List[A])(f: A => List[B]): List[B] = l match {
+      case Cons(h,t) => append(f(h),flatMap(t)(f))
+      case _ => Nil()
+    }
+
+    def map2[A,B](l: List[A])(mapper: A=>B): List[B] = flatMap(l)( v => Cons(mapper(v),Nil()) )
+
+    def filter2[A](l1: List[A])(pred: A=>Boolean): List[A] = flatMap(l1)( v => if(pred(v)) Cons(v,Nil()) else Nil())
+
+    def max(l: List[Int]):Option[Int] = {
+      @annotation.tailrec
+      def _max(l:List[Int], currentMax:Int):Option[Int] = l match {
+        case Cons(h,t) => _max(t,{if(h>currentMax) h else currentMax})
+        case _ => {if(currentMax==Int.MinValue) None else Some(currentMax)}
+      }
+      _max(l,Int.MinValue)
+    }
+
   }
 }
 
@@ -42,4 +68,20 @@ object ListsMain extends App {
   import AndreaGiordano.Lab03.Lists.List
   println(append(Cons(5, Nil()), l)) // 5,10,20,30
   println(filter[Int](l)(_ >=20)) // 20,30
+
+  val lst = Cons(10, Cons(20, Cons(30, Cons(40, Cons(15, Cons(25, Nil()))))))
+
+  println(drop(lst,1)) // Cons (20 , Cons (30 , Nil ()))
+  println(drop(lst,2)) // Cons (30 , Nil ())
+  println(drop(lst,5)) // Nil ()
+
+  println(flatMap (lst)(v => Cons(v+1, Nil()))) // Cons (11 , Cons (21 , Cons (31 , Nil ())))
+  println(flatMap (lst)(v => Cons(v+1, Cons(v+2, Nil()))))
+  // Cons (11 , Cons (12 , Cons (21 , Cons (22 , Cons (31 , Cons (32 , Nil ()))))))
+
+  println(map2(lst)(f =>"ciao " + f))
+
+  println(filter[Int](lst)(_ >=20))
+
+  println(max(lst),max(Nil()))
 }
