@@ -1,4 +1,4 @@
-package Lab02
+package AlessiaCerami.Lab02
 
 object es4 extends App {
 

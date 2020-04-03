@@ -1,4 +1,4 @@
-package Lab03
+package AlessiaCerami.Lab03
 
 object Lazyness extends App {
   def loop[A](a: A): A = loop(a)

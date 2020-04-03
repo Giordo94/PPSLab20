@@ -1,4 +1,4 @@
-package Lab02
+package AlessiaCerami.Lab02
 
 object es7 extends App {
   sealed trait Shape

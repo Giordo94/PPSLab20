@@ -1,6 +1,6 @@
-package Lab02
+package AlessiaCerami.Lab02
 
-object e6 extends App {
+object es6 extends App {
 
   def fib(n: Int): Int = {
     @annotation.tailrec

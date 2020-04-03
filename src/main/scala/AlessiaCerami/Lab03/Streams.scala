@@ -1,6 +1,6 @@
-package Lab03
+package AlessiaCerami.Lab03
 
-import Lab03.Streams.Stream
+import AlessiaCerami.Lab03.Streams.Stream
 
 object Streams {
   import Lists._

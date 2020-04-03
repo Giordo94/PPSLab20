@@ -1,4 +1,4 @@
-package Lab02
+package AlessiaCerami.Lab02
 
 object es5 extends App {
   def compose(f: Int => Int, g: Int => Int): Int => Int = x => f(g(x))

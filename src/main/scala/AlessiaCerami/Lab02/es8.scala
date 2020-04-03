@@ -1,4 +1,4 @@
-package Lab02
+package AlessiaCerami.Lab02
 
 object es8 extends App {
   sealed trait Option [A] // An Optional data type
