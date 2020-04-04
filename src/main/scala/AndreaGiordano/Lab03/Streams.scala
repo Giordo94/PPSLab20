@@ -40,6 +40,18 @@ object Streams {
     }
 
     def iterate[A](init: => A)(next: A => A): Stream[A] = cons(init, iterate(next(init))(next))
+
+    def drop[A](stream: Stream[A])(n: Int):Stream[A] = (stream,n) match {
+      case (Cons(_,t),n) => if (n>0) drop(t())(n-1) else stream
+      case _ => Empty()
+    }
+
+    def constant[A](k:A):Stream[A] = Cons(()=>k,()=>constant(k))
+
+    def fibonacci():Stream[Int] = {
+      def _fib(prev1:Int,prev2:Int):Stream[Int] = Cons(()=>prev1+prev2,()=>_fib(prev1+prev2,prev1))
+      Cons(()=>0,()=>Cons(()=>1,()=>_fib(1,0)))
+    }
   }
 }
 
@@ -53,4 +65,16 @@ object StreamsMain extends App {
 
   val corec: Stream[Int] = Stream.cons(1, corec) // {1,1,1,..}
   println(Stream.toList(Stream.take(corec)(10))) // [1,1,..,1]
+
+  val s = Stream.take(Stream.iterate(0)(_+1))(10)
+  println(Stream.toList(Stream.drop(s)(6)))
+  // = > Cons (6 , Cons (7 , Cons (8 , Cons (9 , Nil ()))))
+
+  import Stream._
+  println(toList(take(constant("x"))(5)))
+  // = > Cons (x, Cons (x, Cons (x, Cons (x, Cons (x, Nil ())))))
+
+  val fibs:Stream[Int] = fibonacci()
+  println(Stream.toList(Stream.take(fibs)(8)))
+  // = > Cons (0 , Cons (1 , Cons (1 , Cons (2 , Cons (3 , Cons (5 , Cons (8 , Cons(13 , Nil ()))))))))
 }

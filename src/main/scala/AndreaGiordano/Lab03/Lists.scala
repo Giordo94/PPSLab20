@@ -57,6 +57,16 @@ object Lists {
       _max(l,Int.MinValue)
     }
 
+    @annotation.tailrec
+    def foldLeft[A,B](l:List[A])(acc:B)(f:(B,A)=>B):B = l match {
+      case Cons(h,t) => foldLeft(t)(f(acc,h))(f)
+      case _ => acc
+    }
+
+    def foldRight[A,B](l:List[A])(acc:B)(f:(A,B)=>B):B = l match {
+      case Cons(h,t) => f(h,foldRight(t)(acc)(f))
+      case _ => acc
+    }
   }
 }
 
@@ -84,4 +94,25 @@ object ListsMain extends App {
   println(filter[Int](lst)(_ >=20))
 
   println(max(lst),max(Nil()))
+
+  println("-------FOLD--------")
+  println(foldLeft(lst)(0)(_-_))
+  println(foldRight(lst)(0)(_-_))
+  println("-------ENDFOLD--------")
+
+  import Person._
+
+  //Student(name: String, year: Int)
+  //Teacher(name: String, course: String)
+  val personList:List[Person] = Cons(Student("Luca",2020), Cons(Teacher("TMario1","Corso1"),
+    Cons(Teacher("TMario2","Corso2"), Cons(Teacher("TMario3","Corso3"),
+      Cons(Teacher("TMario4","Corso4"), Cons(Student("Marco",2020), Nil()))))))
+
+  val teacher = filter(personList){case Teacher(_,_) => true; case _ => false}
+  val courses: List[String] = map(teacher){case Teacher(_,c)=>c}
+
+  println(courses)
+
+  val cFlat:List[String] = flatMap(personList){case Teacher(_,c) => Cons(c,Nil());case _ => Nil()}
+  println(cFlat)
 }
